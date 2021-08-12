@@ -1,0 +1,60 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Webapp for Helmes</title>
+
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+    </head>
+    <body>
+        <div id="headline">
+            Webapp for Helmes
+        </div>
+
+        <div id="content">
+            <div id="description">
+                Please enter your name and pick the Sectors you are currently involved in.
+            </div>
+
+            <form id="form" method="POST" modelAttribute="formRequest">
+                <table id="table">
+                    <tr>
+                        <td id="input_text">Name:</td>
+                        <td><input id="name_input" required name="name" type="text" th:value="${data?.name}"></td>
+                    </tr>
+                    <tr>
+                        <td id="select_text">Sectors:</td>
+                        <td>
+                            <select id="sectors_select" required name="sectors" multiple="" size="15">
+                                <div th:with="margin=${0}" th:if="${!#sets.isEmpty(sectors)}"
+                                     th:replace="index :: printNode(${sectors}, true)">
+                                </div>
+                            </select>
+
+                            <div th:fragment="printNode(children, root)">
+                                <div th:each="child, stat : ${children}">
+
+                                    <option th:style="'margin-left:' + ${child.margin} + 'px;'" th:value="${child.id}" th:text="${child.value}" th:selected="${data?.sectors != null ? #sets.contains(data?.sectors, child?.id) : 'false'}"/>
+
+                                    <div th:if="${!#sets.isEmpty(child.subSectors)}"
+                                         th:replace="index :: printNode(${child.subSectors}, false)"></div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input id="agreement_checkbox" required name="agreement" type="checkbox" th:checked = "${data?.agreement == true ? 'true' : 'false'}">
+                            <label id="checkbox_label" for="agreement_checkbox">Agree to terms</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button  id="submit_input" type="submit">Save</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>
